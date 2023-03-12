@@ -1,0 +1,20 @@
+{
+  "name": "y-protocols-mock",
+  "version": "1.0.0",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist",
+    "push": "make(){ if [[ -z \"$1\" ]]; then echo Commit message should not be empty. ;exit 1; fi; git add .; git commit -m \"$1\"; git push; }; make "
+  },
+  "dependencies": {
+    "lib0": "^0.2.65",
+    "lib0-typescript": "github:ObuchiYuki/lib0-typescript",
+    "typescript": "^4.9.5",
+    "yjs": "github:ObuchiYuki/yjs-typescript"
+  },
+  "devDependencies": {
+    "y-protocols": "^1.0.5"
+  }
+}
