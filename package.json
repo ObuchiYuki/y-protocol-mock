@@ -6,14 +6,9 @@
   ],
   "main": "dist/index.cjs",
   "scripts": {
-    "clean": "rm -rf dist *.d.ts */*.d.ts *.d.ts.map */*.d.ts.map",
-    "dist": "rm -rf dist && rollup -c",
-    "test": "npm run lint && npm run dist && node dist/test.cjs",
-    "lint": "standard && tsc",
-    "types": "tsc",
-    "debug": "rollup -c && concurrently 'rollup -wc' 'http-server -o test.html'",
-    "preversion": "npm run dist && npm run test && npm run types",
-    "postpublish": "npm run clean"
+    "clean": "rm -rf dist",
+    "build": "npm run clean ; tsc",
+    "push": "make(){ if [[ -z \"$1\" ]]; then echo Commit message should not be empty. ;exit 1; fi; npm run build; git add .; git commit -m \"$1\"; git push; }; make "
   },
   "standard": {
     "ignore": [
