@@ -8,7 +8,7 @@ import * as time from 'lib0/time'
 import * as math from 'lib0/math'
 import { Observable } from 'lib0/observable'
 import * as f from 'lib0/function'
-import * as Y from 'yjs' // eslint-disable-line
+import * as Y from 'yjs-typescript' // eslint-disable-line
 
 export const outdatedTimeout = 30000
 
