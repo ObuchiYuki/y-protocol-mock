@@ -20,11 +20,11 @@ export default [{
     dir: './dist',
     format: 'cjs',
     sourcemap: true,
-    entryFileNames: '[name].cjs',
-    chunkFileNames: '[name]-[hash].cjs',
+    entryFileNames: '[name].js',
+    chunkFileNames: '[name]-[hash].js',
     paths: /** @param {any} path */ path => {
       if (/^lib0\//.test(path)) {
-        return `lib0/dist/${path.slice(5) + '.cjs'}`
+        return `lib0/dist/${path.slice(5) + '.js'}`
       }
       return path
     }

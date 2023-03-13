@@ -6,7 +6,6 @@
         "declaration": true,                                   /* Generates corresponding '.d.ts' file. */
         "declarationMap": true,                                /* Generates a sourcemap for each corresponding '.d.ts' file. */
         "outDir": "dist",                                      // this is overritten by `npm run types`
-        "emitDeclarationOnly": true,
         "strict": true,
         "noImplicitAny": true,
         "moduleResolution": "node",
