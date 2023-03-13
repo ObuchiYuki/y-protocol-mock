@@ -39,4 +39,3 @@ export type StateMap = Map<number, number>;
 import * as encoding from "lib0/encoding";
 import * as Y from "yjs-typescript";
 import * as decoding from "lib0/decoding";
-//# sourceMappingURL=sync.d.ts.map

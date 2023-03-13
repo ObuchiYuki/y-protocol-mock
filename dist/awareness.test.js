@@ -1,10 +1,13 @@
-import * as Y from 'yjs-typescript';
-import * as t from 'lib0/testing';
-import * as awareness from './awareness';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.testAwareness = void 0;
+const Y = require("yjs-typescript");
+const t = require("lib0/testing");
+const awareness = require("./awareness");
 /**
  * @param {t.TestCase} tc
  */
-export const testAwareness = tc => {
+const testAwareness = tc => {
     const doc1 = new Y.Doc();
     doc1.clientID = 0;
     const doc2 = new Y.Doc();
@@ -47,3 +50,4 @@ export const testAwareness = tc => {
     t.compare(aw1.getStates().get(0), undefined);
     t.compare(lastChangeLocal, lastChange);
 };
+exports.testAwareness = testAwareness;

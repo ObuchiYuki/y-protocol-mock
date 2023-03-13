@@ -1,14 +1,17 @@
+"use strict";
 /**
  * @module awareness-protocol
  */
-import * as encoding from 'lib0/encoding';
-import * as decoding from 'lib0/decoding';
-import * as time from 'lib0/time';
-import * as math from 'lib0/math';
-import { Observable } from 'lib0/observable';
-import * as f from 'lib0/function';
-import * as Y from 'yjs-typescript'; // eslint-disable-line
-export const outdatedTimeout = 30000;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.applyAwarenessUpdate = exports.modifyAwarenessUpdate = exports.encodeAwarenessUpdate = exports.removeAwarenessStates = exports.Awareness = exports.outdatedTimeout = void 0;
+const encoding = require("lib0/encoding");
+const decoding = require("lib0/decoding");
+const time = require("lib0/time");
+const math = require("lib0/math");
+const observable_1 = require("lib0/observable");
+const f = require("lib0/function");
+const Y = require("yjs-typescript"); // eslint-disable-line
+exports.outdatedTimeout = 30000;
 /**
  * @typedef {Object} MetaClientState
  * @property {number} MetaClientState.clock
@@ -32,7 +35,7 @@ export const outdatedTimeout = 30000;
  *
  * @extends {Observable<string>}
  */
-export class Awareness extends Observable {
+class Awareness extends observable_1.Observable {
     /**
      * @param {Y.Doc} doc
      */
@@ -54,7 +57,7 @@ export class Awareness extends Observable {
         this.meta = new Map();
         this._checkInterval = /** @type {any} */ (setInterval(() => {
             const now = time.getUnixTime();
-            if (this.getLocalState() !== null && (outdatedTimeout / 2 <= now - /** @type {{lastUpdated:number}} */ (this.meta.get(this.clientID)).lastUpdated)) {
+            if (this.getLocalState() !== null && (exports.outdatedTimeout / 2 <= now - /** @type {{lastUpdated:number}} */ (this.meta.get(this.clientID)).lastUpdated)) {
                 // renew local clock
                 this.setLocalState(this.getLocalState());
             }
@@ -63,14 +66,14 @@ export class Awareness extends Observable {
              */
             const remove = [];
             this.meta.forEach((meta, clientid) => {
-                if (clientid !== this.clientID && outdatedTimeout <= now - meta.lastUpdated && this.states.has(clientid)) {
+                if (clientid !== this.clientID && exports.outdatedTimeout <= now - meta.lastUpdated && this.states.has(clientid)) {
                     remove.push(clientid);
                 }
             });
             if (remove.length > 0) {
-                removeAwarenessStates(this, remove, 'timeout');
+                (0, exports.removeAwarenessStates)(this, remove, 'timeout');
             }
-        }, math.floor(outdatedTimeout / 10)));
+        }, math.floor(exports.outdatedTimeout / 10)));
         doc.on('destroy', () => {
             this.destroy();
         });
@@ -146,6 +149,7 @@ export class Awareness extends Observable {
         return this.states;
     }
 }
+exports.Awareness = Awareness;
 /**
  * Mark (remote) clients as inactive and remove them from the list of active peers.
  * This change will be propagated to remote clients.
@@ -154,7 +158,7 @@ export class Awareness extends Observable {
  * @param {Array<number>} clients
  * @param {any} origin
  */
-export const removeAwarenessStates = (awareness, clients, origin) => {
+const removeAwarenessStates = (awareness, clients, origin) => {
     const removed = [];
     for (let i = 0; i < clients.length; i++) {
         const clientID = clients[i];
@@ -175,12 +179,13 @@ export const removeAwarenessStates = (awareness, clients, origin) => {
         awareness.emit('update', [{ added: [], updated: [], removed }, origin]);
     }
 };
+exports.removeAwarenessStates = removeAwarenessStates;
 /**
  * @param {Awareness} awareness
  * @param {Array<number>} clients
  * @return {Uint8Array}
  */
-export const encodeAwarenessUpdate = (awareness, clients, states = awareness.states) => {
+const encodeAwarenessUpdate = (awareness, clients, states = awareness.states) => {
     const len = clients.length;
     const encoder = encoding.createEncoder();
     encoding.writeVarUint(encoder, len);
@@ -194,6 +199,7 @@ export const encodeAwarenessUpdate = (awareness, clients, states = awareness.sta
     }
     return encoding.toUint8Array(encoder);
 };
+exports.encodeAwarenessUpdate = encodeAwarenessUpdate;
 /**
  * Modify the content of an awareness update before re-encoding it to an awareness update.
  *
@@ -204,7 +210,7 @@ export const encodeAwarenessUpdate = (awareness, clients, states = awareness.sta
  * @param {function(any):any} modify
  * @return {Uint8Array}
  */
-export const modifyAwarenessUpdate = (update, modify) => {
+const modifyAwarenessUpdate = (update, modify) => {
     const decoder = decoding.createDecoder(update);
     const encoder = encoding.createEncoder();
     const len = decoding.readVarUint(decoder);
@@ -220,12 +226,13 @@ export const modifyAwarenessUpdate = (update, modify) => {
     }
     return encoding.toUint8Array(encoder);
 };
+exports.modifyAwarenessUpdate = modifyAwarenessUpdate;
 /**
  * @param {Awareness} awareness
  * @param {Uint8Array} update
  * @param {any} origin This will be added to the emitted change event
  */
-export const applyAwarenessUpdate = (awareness, update, origin) => {
+const applyAwarenessUpdate = (awareness, update, origin) => {
     const decoder = decoding.createDecoder(update);
     const timestamp = time.getUnixTime();
     const added = [];
@@ -284,3 +291,4 @@ export const applyAwarenessUpdate = (awareness, update, origin) => {
             }, origin]);
     }
 };
+exports.applyAwarenessUpdate = applyAwarenessUpdate;

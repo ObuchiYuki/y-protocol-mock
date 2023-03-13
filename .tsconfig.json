@@ -4,10 +4,13 @@
         "module": "CommonJS",
         "allowJs": true, 
         "checkJs": true,
-        "declaration": true,
-        "outDir": "./dist",
+        "declaration": true,                                 
+        "declarationMap": true,                    
+        "outDir": "dist",                          
         "strict": true,
+        "noImplicitAny": true,
         "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true
     },
     "include": [
         "src"

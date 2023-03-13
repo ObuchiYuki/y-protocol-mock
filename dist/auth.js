@@ -1,15 +1,19 @@
-import * as Y from 'yjs-typescript'; // eslint-disable-line
-import * as encoding from 'lib0/encoding';
-import * as decoding from 'lib0/decoding';
-export const messagePermissionDenied = 0;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.readAuthMessage = exports.writePermissionDenied = exports.messagePermissionDenied = void 0;
+const Y = require("yjs-typescript"); // eslint-disable-line
+const encoding = require("lib0/encoding");
+const decoding = require("lib0/decoding");
+exports.messagePermissionDenied = 0;
 /**
  * @param {encoding.Encoder} encoder
  * @param {string} reason
  */
-export const writePermissionDenied = (encoder, reason) => {
-    encoding.writeVarUint(encoder, messagePermissionDenied);
+const writePermissionDenied = (encoder, reason) => {
+    encoding.writeVarUint(encoder, exports.messagePermissionDenied);
     encoding.writeVarString(encoder, reason);
 };
+exports.writePermissionDenied = writePermissionDenied;
 /**
  * @callback PermissionDeniedHandler
  * @param {any} y
@@ -21,8 +25,9 @@ export const writePermissionDenied = (encoder, reason) => {
  * @param {Y.Doc} y
  * @param {PermissionDeniedHandler} permissionDeniedHandler
  */
-export const readAuthMessage = (decoder, y, permissionDeniedHandler) => {
+const readAuthMessage = (decoder, y, permissionDeniedHandler) => {
     switch (decoding.readVarUint(decoder)) {
-        case messagePermissionDenied: permissionDeniedHandler(y, decoding.readVarString(decoder));
+        case exports.messagePermissionDenied: permissionDeniedHandler(y, decoding.readVarString(decoder));
     }
 };
+exports.readAuthMessage = readAuthMessage;

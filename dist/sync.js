@@ -1,9 +1,12 @@
+"use strict";
 /**
  * @module sync-protocol
  */
-import * as encoding from 'lib0/encoding';
-import * as decoding from 'lib0/decoding';
-import * as Y from 'yjs-typescript';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.readSyncMessage = exports.readUpdate = exports.writeUpdate = exports.readSyncStep2 = exports.readSyncStep1 = exports.writeSyncStep2 = exports.writeSyncStep1 = exports.messageYjsUpdate = exports.messageYjsSyncStep2 = exports.messageYjsSyncStep1 = void 0;
+const encoding = require("lib0/encoding");
+const decoding = require("lib0/decoding");
+const Y = require("yjs-typescript");
 /**
  * @typedef {Map<number, number>} StateMap
  */
@@ -31,29 +34,31 @@ import * as Y from 'yjs-typescript';
  *
  * stringify[messageType] stringifies a message definition (messageType is already read from the bufffer)
  */
-export const messageYjsSyncStep1 = 0;
-export const messageYjsSyncStep2 = 1;
-export const messageYjsUpdate = 2;
+exports.messageYjsSyncStep1 = 0;
+exports.messageYjsSyncStep2 = 1;
+exports.messageYjsUpdate = 2;
 /**
  * Create a sync step 1 message based on the state of the current shared document.
  *
  * @param {encoding.Encoder} encoder
  * @param {Y.Doc} doc
  */
-export const writeSyncStep1 = (encoder, doc) => {
-    encoding.writeVarUint(encoder, messageYjsSyncStep1);
+const writeSyncStep1 = (encoder, doc) => {
+    encoding.writeVarUint(encoder, exports.messageYjsSyncStep1);
     const sv = Y.encodeStateVector(doc);
     encoding.writeVarUint8Array(encoder, sv);
 };
+exports.writeSyncStep1 = writeSyncStep1;
 /**
  * @param {encoding.Encoder} encoder
  * @param {Y.Doc} doc
  * @param {Uint8Array} [encodedStateVector]
  */
-export const writeSyncStep2 = (encoder, doc, encodedStateVector) => {
-    encoding.writeVarUint(encoder, messageYjsSyncStep2);
+const writeSyncStep2 = (encoder, doc, encodedStateVector) => {
+    encoding.writeVarUint(encoder, exports.messageYjsSyncStep2);
     encoding.writeVarUint8Array(encoder, Y.encodeStateAsUpdate(doc, encodedStateVector));
 };
+exports.writeSyncStep2 = writeSyncStep2;
 /**
  * Read SyncStep1 message and reply with SyncStep2.
  *
@@ -61,7 +66,8 @@ export const writeSyncStep2 = (encoder, doc, encodedStateVector) => {
  * @param {encoding.Encoder} encoder The received message
  * @param {Y.Doc} doc
  */
-export const readSyncStep1 = (decoder, encoder, doc) => writeSyncStep2(encoder, doc, decoding.readVarUint8Array(decoder));
+const readSyncStep1 = (decoder, encoder, doc) => (0, exports.writeSyncStep2)(encoder, doc, decoding.readVarUint8Array(decoder));
+exports.readSyncStep1 = readSyncStep1;
 /**
  * Read and apply Structs and then DeleteStore to a y instance.
  *
@@ -69,7 +75,7 @@ export const readSyncStep1 = (decoder, encoder, doc) => writeSyncStep2(encoder, 
  * @param {Y.Doc} doc
  * @param {any} transactionOrigin
  */
-export const readSyncStep2 = (decoder, doc, transactionOrigin) => {
+const readSyncStep2 = (decoder, doc, transactionOrigin) => {
     try {
         Y.applyUpdate(doc, decoding.readVarUint8Array(decoder), transactionOrigin);
     }
@@ -78,14 +84,16 @@ export const readSyncStep2 = (decoder, doc, transactionOrigin) => {
         console.error('Caught error while handling a Yjs update', error);
     }
 };
+exports.readSyncStep2 = readSyncStep2;
 /**
  * @param {encoding.Encoder} encoder
  * @param {Uint8Array} update
  */
-export const writeUpdate = (encoder, update) => {
-    encoding.writeVarUint(encoder, messageYjsUpdate);
+const writeUpdate = (encoder, update) => {
+    encoding.writeVarUint(encoder, exports.messageYjsUpdate);
     encoding.writeVarUint8Array(encoder, update);
 };
+exports.writeUpdate = writeUpdate;
 /**
  * Read and apply Structs and then DeleteStore to a y instance.
  *
@@ -93,27 +101,28 @@ export const writeUpdate = (encoder, update) => {
  * @param {Y.Doc} doc
  * @param {any} transactionOrigin
  */
-export const readUpdate = readSyncStep2;
+exports.readUpdate = exports.readSyncStep2;
 /**
  * @param {decoding.Decoder} decoder A message received from another client
  * @param {encoding.Encoder} encoder The reply message. Does not need to be sent if empty.
  * @param {Y.Doc} doc
  * @param {any} transactionOrigin
  */
-export const readSyncMessage = (decoder, encoder, doc, transactionOrigin) => {
+const readSyncMessage = (decoder, encoder, doc, transactionOrigin) => {
     const messageType = decoding.readVarUint(decoder);
     switch (messageType) {
-        case messageYjsSyncStep1:
-            readSyncStep1(decoder, encoder, doc);
+        case exports.messageYjsSyncStep1:
+            (0, exports.readSyncStep1)(decoder, encoder, doc);
             break;
-        case messageYjsSyncStep2:
-            readSyncStep2(decoder, doc, transactionOrigin);
+        case exports.messageYjsSyncStep2:
+            (0, exports.readSyncStep2)(decoder, doc, transactionOrigin);
             break;
-        case messageYjsUpdate:
-            readUpdate(decoder, doc, transactionOrigin);
+        case exports.messageYjsUpdate:
+            (0, exports.readUpdate)(decoder, doc, transactionOrigin);
             break;
         default:
             throw new Error('Unknown message type');
     }
     return messageType;
 };
+exports.readSyncMessage = readSyncMessage;

@@ -83,4 +83,3 @@ export type MetaClientState = {
 };
 import { Observable } from "lib0/observable";
 import * as Y from "yjs-typescript";
-//# sourceMappingURL=awareness.d.ts.map
