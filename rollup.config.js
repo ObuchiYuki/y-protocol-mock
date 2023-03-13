@@ -1,10 +1,8 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 
-const files = ['awareness.js', 'auth.js', 'sync.js', 'test.js']
-
 export default [{
-  input: './test.js',
+  input: './src/test.js',
   output: {
     file: './dist/test.js',
     format: 'iife',
@@ -15,7 +13,9 @@ export default [{
     commonjs()
   ]
 }, {
-  input: files,
+  input: [
+    './src/index.js'
+  ],
   output: {
     dir: './dist',
     format: 'cjs',

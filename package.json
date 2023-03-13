@@ -4,6 +4,7 @@
   "files": [
     "dist"
   ],
+  "main": "dist/index.cjs",
   "scripts": {
     "clean": "rm -rf dist *.d.ts */*.d.ts *.d.ts.map */*.d.ts.map",
     "dist": "rm -rf dist && rollup -c",
